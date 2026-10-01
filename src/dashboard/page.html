@@ -1,0 +1,975 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Romeo · Tablero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap">
+<style>
+  :root {
+    --pergamino: #F1E6CF;
+    --pergamino-2: #E8D9BA;
+    --tinta: #2A1A12;
+    --tinta-2: #5A4130;
+    --burdeo: #7B1E22;
+    --burdeo-osc: #5E1418;
+    --oro: #9C7A2E;
+    --noche: #1F1512;
+    --noche-2: #2B1E19;
+    --oro-claro: #C9A24A;
+    --oro-brillo: #E3C273;
+    --oliva: #56692F;
+    --titulo: 'IM Fell English', 'EB Garamond', Georgia, 'Times New Roman', serif;
+    --versalitas: 'IM Fell English SC', 'IM Fell English', Georgia, serif;
+    --texto: 'EB Garamond', Georgia, 'Times New Roman', serif;
+    --hueco: clamp(10px, 1.45vh, 22px);
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html { font-size: clamp(14px, calc(0.6vw + 0.85vh), 24px); }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    color: var(--tinta);
+    font-family: var(--texto);
+    line-height: 1.3;
+    background-color: var(--pergamino);
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .25  0 0 0 0 .12  0 0 0 .07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+      radial-gradient(ellipse at 50% 35%, var(--pergamino) 0%, var(--pergamino) 45%, var(--pergamino-2) 100%);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  h1, h2, h3, p { margin: 0; }
+  button, select { font: inherit; color: inherit; }
+
+  .app {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: var(--hueco);
+    padding: var(--hueco) clamp(12px, 1.6vw, 34px) calc(var(--hueco) * 1.2);
+  }
+
+  /* ---------- cabecera ---------- */
+  .cabecera {
+    display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+    padding-bottom: .55rem;
+    border-bottom: 3px double var(--oro);
+  }
+  .marca { display: flex; align-items: baseline; gap: 1.1rem; min-width: 0; }
+  .marca h1 {
+    font-family: var(--titulo); font-weight: 400;
+    font-size: 3.1rem; line-height: 1; color: var(--burdeo); letter-spacing: .01em;
+  }
+  .lema { display: flex; flex-direction: column; gap: .1rem; }
+  .lema .sc { color: var(--oro); }
+  .lema span:last-child { font-style: italic; color: var(--tinta-2); font-size: 1.15rem; }
+  .sc {
+    font-family: var(--versalitas); font-size: .82rem; letter-spacing: .14em;
+    text-transform: lowercase; color: var(--tinta-2);
+  }
+  .cab-der { display: flex; align-items: center; gap: .8rem; flex-shrink: 0; }
+  .pill {
+    display: inline-flex; align-items: center; gap: .5em;
+    padding: .32em .9em .36em; border-radius: 999px;
+    border: 1px solid var(--oro); background: rgba(255, 250, 238, .55);
+    font-size: 1rem; white-space: nowrap; color: var(--tinta-2);
+  }
+  .pill i { width: .62em; height: .62em; border-radius: 50%; background: var(--tinta-2); flex: none; }
+  .pill[data-estado="conectado"] i { background: var(--oliva); box-shadow: 0 0 0 .2em rgba(86, 105, 47, .18); }
+  .pill[data-estado="conectando"] i,
+  .pill[data-estado="esperando_vinculo"] i { background: var(--oro); animation: latir 1.4s ease-in-out infinite; }
+  .pill[data-estado="desconectado"] i { background: transparent; border: 2px solid var(--burdeo); }
+  .pill-estado { font-family: var(--versalitas); letter-spacing: .12em; text-transform: lowercase; font-size: 1.05rem; }
+  .pill-estado[data-estado="vivo"] { color: var(--oliva); border-color: var(--oliva); }
+  .pill-estado[data-estado="vivo"] i { background: var(--oliva); animation: latir 2.2s ease-in-out infinite; }
+  .pill-estado[data-estado="pausa"] { background: var(--burdeo); color: var(--pergamino); border-color: var(--burdeo); }
+  .pill-estado[data-estado="pausa"] i { background: var(--pergamino); }
+  .pill-estado[data-estado="sin-tablero"] { color: var(--burdeo); border-style: dashed; }
+  .pill-estado[data-estado="sin-tablero"] i { background: var(--burdeo); animation: latir 1s ease-in-out infinite; }
+  .reloj { font-family: var(--titulo); font-size: 2rem; color: var(--tinta); min-width: 3.2em; text-align: right; }
+  @keyframes latir { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+
+  /* ---------- banda de pausa: vive en la fila de la cabecera para no robarle alto a las tarjetas ---------- */
+  .banda-pausa {
+    flex: 1 1 auto; min-width: 0; align-self: stretch;
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+    background: var(--burdeo); color: var(--pergamino);
+    border: 3px double var(--oro-claro);
+    padding: .1rem 1rem; font-family: var(--titulo); font-size: 1.75rem; letter-spacing: .02em;
+    white-space: nowrap; overflow: hidden;
+  }
+  .banda-pausa[hidden] { display: none; }
+  .banda-pausa small { font-family: var(--texto); font-style: italic; font-size: 1.05rem; opacity: .9; overflow: hidden; text-overflow: ellipsis; }
+  body.pausado .lema { display: none; }
+
+  /* ---------- grilla ---------- */
+  .cabecera { flex: none; }
+  .grilla {
+    flex: 1 1 auto;
+    display: grid; min-height: 0;
+    grid-template-columns: minmax(0, .92fr) minmax(0, 1.42fr) minmax(0, 1.12fr);
+    gap: clamp(12px, 1.35vw, 30px);
+  }
+  .col { display: flex; flex-direction: column; gap: var(--hueco); min-height: 0; min-width: 0; }
+
+  /* ---------- tarjetas ---------- */
+  .tarjeta {
+    position: relative;
+    background: rgba(255, 251, 241, .42);
+    border: 3px double var(--oro);
+    border-radius: 3px;
+    padding: 1rem 1.15rem 1.05rem;
+    box-shadow: 0 10px 28px -20px rgba(42, 26, 18, .55), inset 0 0 0 1px rgba(255, 255, 255, .35);
+    min-width: 0;
+  }
+  .tarjeta::after {
+    content: ""; position: absolute; inset: 5px; pointer-events: none;
+    border: 1px solid rgba(156, 122, 46, .28);
+  }
+  .tarjeta-cab {
+    display: flex; align-items: flex-end; justify-content: space-between; gap: .8rem;
+    padding-bottom: .45rem; margin-bottom: .7rem;
+    border-bottom: 1px solid rgba(156, 122, 46, .45);
+  }
+  .tarjeta h2 { font-family: var(--titulo); font-weight: 400; font-size: 2.6rem; line-height: 1; }
+  .tarjeta h3 { font-family: var(--titulo); font-weight: 400; font-size: 1.55rem; line-height: 1.05; color: var(--tinta); }
+  .contador {
+    font-family: var(--titulo); font-size: 1.4rem; color: var(--burdeo);
+    min-width: 1.8em; text-align: center; padding: 0 .4em;
+    border: 1px solid rgba(123, 30, 34, .35); border-radius: 999px;
+  }
+  .panel { display: flex; flex-direction: column; min-height: 0; }
+  .panel > ol { flex: 1 1 auto; min-height: 0; overflow-y: auto; margin: 0; padding: 0 .2rem 0 0; list-style: none; }
+  .panel > ol::-webkit-scrollbar { width: 6px; }
+  .panel > ol::-webkit-scrollbar-thumb { background: rgba(156, 122, 46, .45); border-radius: 3px; }
+  .vacio { color: var(--tinta-2); font-style: italic; padding: .6rem 0; }
+  .vacio[hidden] { display: none; }
+  .pie { margin-top: .6rem; padding-top: .5rem; border-top: 1px solid rgba(156, 122, 46, .35); color: var(--tinta-2); font-size: .95rem; font-style: italic; }
+
+  /* ---------- botones ---------- */
+  .boton {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5em;
+    border: 3px double var(--oro); border-radius: 3px; cursor: pointer;
+    background: var(--pergamino); color: var(--tinta);
+    padding: .5em 1em; font-size: 1.05rem; font-weight: 600; letter-spacing: .01em;
+    transition: transform .12s ease, background-color .2s ease, color .2s ease, opacity .2s ease;
+  }
+  .boton:hover { background: #F7EEDB; }
+  .boton:active { transform: translateY(1px); }
+  .boton:disabled { opacity: .55; cursor: progress; }
+  .boton:focus-visible, select:focus-visible, .desplegar:focus-visible { outline: 2px solid var(--burdeo); outline-offset: 2px; }
+  .boton-pausa {
+    width: 100%; font-family: var(--titulo); font-weight: 400; font-size: 1.7rem; padding: .45em .8em .5em;
+    background: var(--burdeo); color: var(--pergamino); border-color: var(--oro-claro);
+  }
+  .boton-pausa:hover { background: var(--burdeo-osc); }
+  body.pausado .boton-pausa { background: var(--oliva); border-color: var(--oro-claro); color: #FBF5E6; }
+  body.pausado .boton-pausa:hover { background: #475827; }
+  .boton-balcon { width: 100%; font-family: var(--titulo); font-weight: 400; font-size: 1.35rem; }
+  .boton.chico { font-size: .95rem; padding: .3em .8em; border-width: 3px; }
+  .boton.primario { background: var(--burdeo); color: var(--pergamino); border-color: var(--oro-claro); }
+  .boton.primario:hover { background: var(--burdeo-osc); }
+  .boton.secundario { background: transparent; }
+
+  /* ---------- conexión y controles ---------- */
+  .conexion-estado { font-size: 1.3rem; font-weight: 500; }
+  .conexion-estado b { font-weight: 600; color: var(--burdeo); }
+  .codigo { margin-top: .6rem; padding: .5rem .7rem; border: 1px dashed var(--oro); background: rgba(255, 251, 241, .6); }
+  .codigo[hidden] { display: none; }
+  .codigo-valor { font-family: var(--titulo); font-size: 2.2rem; letter-spacing: .14em; color: var(--burdeo); }
+  .nota-qr { margin-top: .55rem; font-size: .92rem; font-style: italic; color: var(--tinta-2); }
+  .cerebro { margin-top: .6rem; padding-top: .5rem; border-top: 1px solid rgba(156, 122, 46, .35); display: flex; flex-direction: column; gap: .25rem; }
+  .cerebro select { width: 100%; font-size: 1rem; }
+  .cerebro-detalle { font-size: .9rem; font-style: italic; color: var(--tinta-2); }
+  .controles { display: flex; flex-direction: column; gap: .75rem; }
+  .corte { margin-top: .35rem; font-size: 1.05rem; color: var(--tinta-2); text-align: center; }
+  .corte b { color: var(--tinta); font-weight: 600; }
+  .frase { text-align: center; padding-top: .55rem; border-top: 1px solid rgba(156, 122, 46, .35); }
+  .frase-valor { font-family: var(--titulo); font-size: 2.1rem; color: var(--burdeo); line-height: 1.15; }
+
+  /* ---------- memoria ---------- */
+  .memoria { display: flex; flex-direction: column; min-height: 0; padding-top: .7rem; padding-bottom: .7rem; }
+  .memoria.abierta { flex: 1 1 auto; }
+  .desplegar {
+    display: flex; align-items: baseline; gap: .7rem; width: 100%;
+    background: none; border: 0; padding: 0; cursor: pointer; text-align: left;
+  }
+  .titulo-mem { flex: none; font-family: var(--titulo); font-size: 1.55rem; line-height: 1.05; color: var(--tinta); }
+  .memoria-hace { flex: 1; color: var(--tinta-2); font-style: italic; font-size: .95rem; }
+  .flecha { font-size: 1.05rem; color: var(--oro); transition: transform .2s ease; }
+  .memoria.abierta .flecha { transform: rotate(90deg); }
+  .memoria-cuerpo { margin-top: .6rem; padding-top: .55rem; border-top: 1px solid rgba(156, 122, 46, .45); overflow-y: auto; min-height: 0; flex: 1 1 auto; }
+  .memoria-cuerpo[hidden] { display: none; }
+  .mem + .mem { margin-top: .7rem; }
+  .mem-texto { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .98rem; margin-top: .15rem; }
+  .mem-texto.nada { color: var(--tinta-2); font-style: italic; }
+
+  /* ---------- Romeo (héroe) ---------- */
+  .heroe {
+    flex: 1.55 1 0; min-height: 0;
+    display: flex; flex-direction: column;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(201, 162, 74, .10), transparent 60%),
+      var(--noche);
+    color: var(--oro-claro);
+    border-color: var(--oro-claro);
+    padding: 1.15rem 1.5rem 1rem;
+    box-shadow: 0 18px 40px -22px rgba(31, 21, 18, .85);
+  }
+  .heroe::after { border-color: rgba(201, 162, 74, .35); }
+  .heroe .tarjeta-cab { border-bottom-color: rgba(201, 162, 74, .4); }
+  .heroe h2 { color: var(--oro-brillo); font-size: 3rem; }
+  .heroe .sc { color: rgba(232, 217, 186, .7); }
+  .desde { font-style: italic; font-size: 1.1rem; color: inherit; opacity: .9; text-align: right; }
+  .heroe .desde { color: rgba(232, 217, 186, .82); }
+  .cifras { flex: 1 1 auto; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: .4rem 1.4rem; min-height: 0; }
+  .cifra { display: flex; flex-direction: column; justify-content: center; min-width: 0; padding: .2rem 0; }
+  .num {
+    font-family: var(--texto); font-weight: 500;
+    font-variant-numeric: lining-nums tabular-nums;
+    line-height: .95; white-space: nowrap; letter-spacing: -.01em;
+  }
+  .num small { font-size: .42em; font-weight: 500; margin-left: .18em; letter-spacing: 0; }
+  .heroe .num { font-size: clamp(3.4rem, min(10.8vh, 6.2vw), 10rem); color: var(--oro-brillo); transition: text-shadow .6s ease; }
+  .heroe .num small { color: var(--oro-claro); }
+  .rotulo { font-size: 1.22rem; margin-top: .3rem; }
+  .heroe .rotulo { color: #E8D9BA; }
+  .nota { font-style: italic; font-size: 1rem; margin-top: .15rem; min-height: 1.3em; }
+  .heroe .nota { color: var(--oro-claro); }
+  .cifra.cambio .num { text-shadow: 0 0 .35em rgba(227, 194, 115, .55); }
+  .ultimo {
+    margin-top: .5rem; padding-top: .55rem; border-top: 1px solid rgba(201, 162, 74, .35);
+    font-size: 1.12rem; font-style: italic; color: rgba(232, 217, 186, .88);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ultimo.fresco { animation: brillo 2.4s ease-out; }
+  @keyframes brillo { 0% { color: var(--oro-brillo); text-shadow: 0 0 .6em rgba(227, 194, 115, .6); } 100% { text-shadow: none; } }
+  .sello {
+    position: absolute; z-index: 2; left: 50%; top: 52%;
+    transform: translate(-50%, -50%) rotate(-8deg);
+    font-family: var(--titulo); font-size: 4.2rem; line-height: 1; letter-spacing: .06em;
+    color: #F4E3C0; background: rgba(123, 30, 34, .92);
+    border: 4px double var(--oro-claro); padding: .25em .7em .3em;
+    box-shadow: 0 12px 30px -10px rgba(0, 0, 0, .6);
+    display: none; pointer-events: none; white-space: nowrap;
+  }
+  body.pausado .sello { display: block; }
+  body.pausado .heroe .cifras, body.pausado .heroe .ultimo { opacity: .32; filter: saturate(.5); }
+
+  /* ---------- Vos ---------- */
+  .vos { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; padding: 1rem 1.5rem .9rem; }
+  .vos h2 { color: var(--tinta); }
+  .vos .desde { color: var(--tinta-2); }
+  .vos .num { font-size: clamp(2.2rem, min(6vh, 3.5vw), 5.4rem); color: var(--burdeo); }
+  .vos .num small { color: var(--tinta-2); }
+  .vos .rotulo { color: var(--tinta-2); font-size: 1.1rem; }
+
+  /* ---------- chats ---------- */
+  .chats-panel { flex: 1.65 1 0; }
+  .borradores-panel { flex: 1 1 0; }
+  .chat { padding: .6rem 0 .65rem; border-bottom: 1px solid rgba(156, 122, 46, .3); }
+  .chat:last-child { border-bottom: 0; }
+  .chat.nuevo { animation: resaltar 2.2s ease-out; }
+  @keyframes resaltar { 0% { background: rgba(201, 162, 74, .35); } 100% { background: transparent; } }
+  .chat-cab { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+  .quien { font-weight: 600; font-size: 1.12rem; font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
+  .categoria {
+    font-family: var(--versalitas); text-transform: lowercase; letter-spacing: .1em; font-size: .85rem;
+    color: var(--burdeo); border: 1px solid rgba(123, 30, 34, .35); border-radius: 999px; padding: .02em .6em .1em;
+  }
+  .categoria.vacia { color: var(--tinta-2); border-color: rgba(90, 65, 48, .3); }
+  .regla-sel { margin-left: auto; }
+  select {
+    appearance: none; -webkit-appearance: none;
+    background-color: var(--pergamino);
+    background-image: linear-gradient(45deg, transparent 50%, var(--tinta-2) 50%), linear-gradient(135deg, var(--tinta-2) 50%, transparent 50%);
+    background-position: calc(100% - 14px) 55%, calc(100% - 9px) 55%;
+    background-size: 5px 5px, 5px 5px; background-repeat: no-repeat;
+    border: 1px solid var(--oro); border-radius: 3px;
+    padding: .18em 1.8em .22em .55em; font-size: .98rem; cursor: pointer;
+  }
+  .chat[data-regla="auto"] select { border-color: var(--oliva); color: var(--oliva); font-weight: 600; }
+  .chat[data-regla="sugerir"] select { border-color: var(--oro); color: #7A5D1E; font-weight: 600; }
+  .chat[data-regla="no_tocar"] select { color: var(--tinta-2); }
+  .interes { display: flex; align-items: center; gap: .55rem; margin-top: .35rem; font-size: .9rem; color: var(--tinta-2); }
+  .barra { flex: 1; height: .55rem; border: 1px solid rgba(156, 122, 46, .7); border-radius: 999px; overflow: hidden; background: rgba(255, 251, 241, .6); }
+  .relleno { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #A2484B, var(--burdeo)); transition: width .8s cubic-bezier(.2, .7, .2, 1); }
+  .interes-num { min-width: 2.2em; text-align: right; font-variant-numeric: lining-nums tabular-nums; color: var(--tinta); font-weight: 600; }
+  .ultimos { list-style: none; margin: .35rem 0 0; padding: 0; display: flex; flex-direction: column; gap: .15rem; }
+  .msg { display: flex; gap: .5rem; font-size: 1rem; line-height: 1.25; min-width: 0; }
+  .msg b { flex: none; font-family: var(--versalitas); text-transform: lowercase; font-weight: 400; letter-spacing: .08em; font-size: .85rem; color: var(--tinta-2); min-width: 4.6em; padding-top: .12em; }
+  .msg[data-autor="romeo"] b { color: var(--burdeo); }
+  .msg span { min-width: 0; overflow-wrap: anywhere; }
+  .msg[data-autor="romeo"] span { font-style: italic; }
+  .oculto { margin-top: .3rem; font-size: .92rem; font-style: italic; color: var(--tinta-2); }
+
+  /* ---------- borradores ---------- */
+  .borrador { padding: .55rem 0 .6rem; border-bottom: 1px solid rgba(156, 122, 46, .3); }
+  .borrador:last-child { border-bottom: 0; }
+  .borr-cab { display: flex; align-items: baseline; gap: .6rem; }
+  .borr-cab .hace { margin-left: auto; font-size: .88rem; font-style: italic; color: var(--tinta-2); }
+  .borr-texto { margin: .3rem 0 .45rem; font-style: italic; font-size: 1.02rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .borrador.privado .borr-texto { filter: blur(.38em); transition: filter .2s ease; user-select: none; }
+  .borrador.privado:hover .borr-texto, .borrador.privado:focus-within .borr-texto { filter: none; user-select: auto; }
+  .borr-acciones { display: flex; gap: .5rem; }
+
+  /* ---------- aviso ---------- */
+  .aviso {
+    position: fixed; left: 50%; bottom: 1.4rem; transform: translate(-50%, 1rem);
+    background: var(--noche); color: var(--pergamino); border: 3px double var(--oro-claro);
+    padding: .5rem 1.1rem; font-size: 1rem; opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease; z-index: 10;
+  }
+  .aviso.ver { opacity: 1; transform: translate(-50%, 0); }
+
+  /* ---------- pantallas chicas: todo en una columna con scroll ---------- */
+  @media (max-width: 1180px), (max-height: 620px) {
+    body { overflow: auto; }
+    .app { height: auto; min-height: 100vh; }
+    .grilla { flex: none; }
+    .grilla { grid-template-columns: minmax(0, 1fr); }
+    .col-centro { order: -1; }
+    .heroe, .vos { flex: none; }
+    .heroe .num { font-size: clamp(3rem, 12vw, 6.5rem); }
+    .vos .num { font-size: clamp(2rem, 7vw, 3.6rem); }
+    .panel > ol { max-height: 70vh; }
+    .memoria-cuerpo { max-height: 60vh; }
+  }
+  @media (max-width: 640px) {
+    .cabecera { flex-wrap: wrap; }
+    .banda-pausa { order: 3; flex-basis: 100%; white-space: normal; flex-wrap: wrap; padding: .4rem .8rem; }
+    .marca { flex-wrap: wrap; }
+    .cifras { gap: .6rem 1rem; }
+    .reloj { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="cabecera">
+    <div class="marca">
+      <h1>Romeo</h1>
+      <div class="lema">
+        <span class="sc" id="lema-evento"></span>
+        <span>Le escribís a <span id="nombre-dueno">vos</span>. Te contesta Romeo.</span>
+      </div>
+    </div>
+    <div class="banda-pausa" id="banda-pausa" hidden>
+      Romeo está en pausa <small>no le contesta a nadie hasta que lo reanudes</small>
+    </div>
+    <div class="cab-der">
+      <span class="pill" id="pill-conexion" data-estado="desconectado"><i></i><span id="pill-conexion-txt">WhatsApp desconectado</span></span>
+      <span class="pill pill-estado" id="pill-estado" data-estado="sin-tablero"><i></i><span id="pill-estado-txt">conectando…</span></span>
+      <time class="reloj" id="reloj">--:--</time>
+    </div>
+  </header>
+
+  <main class="grilla">
+    <!-- izquierda: lo del dueño -->
+    <div class="col col-izq">
+      <section class="tarjeta" id="sec-conexion" aria-labelledby="t-conexion">
+        <header class="tarjeta-cab"><h3 id="t-conexion">Conexión</h3></header>
+        <p class="conexion-estado" id="conexion-estado">Desconectado</p>
+        <div class="codigo" id="conexion-codigo" hidden>
+          <p class="sc">código de vinculación</p>
+          <p class="codigo-valor" id="codigo-valor"></p>
+        </div>
+        <p class="nota-qr">El QR de vinculación sale solo en la terminal.</p>
+        <div class="cerebro">
+          <label class="sc" for="sel-proveedor">cerebro</label>
+          <select id="sel-proveedor">
+            <option value="auto">Automático</option>
+            <option value="api">API key</option>
+            <option value="suscripcion">Suscripción (Claude Code)</option>
+            <option value="local">Modelo local</option>
+            <option value="prueba">Prueba</option>
+          </select>
+          <p class="cerebro-detalle" id="proveedor-detalle"></p>
+        </div>
+      </section>
+
+      <section class="tarjeta controles" id="sec-controles" aria-labelledby="t-controles">
+        <header class="tarjeta-cab" style="margin-bottom:0"><h3 id="t-controles">Controles</h3></header>
+        <button class="boton boton-pausa" id="btn-pausa" type="button" aria-pressed="false">Pausar a Romeo</button>
+        <div>
+          <button class="boton boton-balcon" id="btn-corte" type="button">Abrir el balcón</button>
+          <p class="corte" id="corte-texto">El balcón está cerrado.</p>
+        </div>
+        <div class="frase">
+          <p class="sc">para entrar, escribí</p>
+          <p class="frase-valor">“<span id="frase">Hola Romeo</span>”</p>
+        </div>
+      </section>
+
+      <section class="tarjeta memoria" id="sec-memoria">
+        <button class="desplegar" id="btn-memoria" type="button" aria-expanded="false" aria-controls="memoria-cuerpo" aria-label="Memoria: mostrar u ocultar">
+          <span class="titulo-mem">Memoria</span>
+          <span class="memoria-hace" id="memoria-hace">todavía no se armó</span>
+          <span class="flecha" aria-hidden="true">▶</span>
+        </button>
+        <div class="memoria-cuerpo" id="memoria-cuerpo" hidden>
+          <div class="mem"><p class="sc">agenda</p><p class="mem-texto" id="mem-agenda"></p></div>
+          <div class="mem"><p class="sc">hoy</p><p class="mem-texto" id="mem-hoy"></p></div>
+          <div class="mem"><p class="sc">perfil</p><p class="mem-texto" id="mem-perfil"></p></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- centro: Romeo contra Vos -->
+    <div class="col col-centro">
+      <section class="tarjeta heroe" id="sec-romeo" aria-labelledby="t-romeo">
+        <div class="sello" aria-hidden="true">En pausa</div>
+        <header class="tarjeta-cab">
+          <div><p class="sc">lo que hizo esta noche</p><h2 id="t-romeo">Romeo</h2></div>
+          <p class="desde" id="m-desde">desde hoy</p>
+        </header>
+        <div class="cifras">
+          <div class="cifra" id="c-tiempo">
+            <p class="num"><span id="m-tiempo">—</span><small id="m-tiempo-u"></small></p>
+            <p class="rotulo">Tiempo de respuesta</p>
+            <p class="nota" id="m-veces"></p>
+          </div>
+          <div class="cifra" id="c-chats">
+            <p class="num"><span id="m-chats">0</span></p>
+            <p class="rotulo">Chats que atendió</p>
+            <p class="nota"></p>
+          </div>
+          <div class="cifra" id="c-enviados">
+            <p class="num"><span id="m-enviados">0</span></p>
+            <p class="rotulo">Mensajes enviados</p>
+            <p class="nota"></p>
+          </div>
+          <div class="cifra" id="c-citas">
+            <p class="num"><span id="m-citas">0</span></p>
+            <p class="rotulo">Citas propuestas</p>
+            <p class="nota"></p>
+          </div>
+        </div>
+        <p class="ultimo" id="ultimo">Esperando el primer “Hola Romeo”…</p>
+      </section>
+
+      <section class="tarjeta vos" id="sec-vos" aria-labelledby="t-vos">
+        <header class="tarjeta-cab">
+          <div><p class="sc">lo que hacés vos</p><h2 id="t-vos">Vos</h2></div>
+          <p class="desde">según tu historial</p>
+        </header>
+        <div class="cifras">
+          <div class="cifra"><p class="num">3,7<small>min</small></p><p class="rotulo">Tardás en contestar</p></div>
+          <div class="cifra"><p class="num">53<small>%</small></p><p class="rotulo">Contestás en menos de 5 min</p></div>
+          <div class="cifra"><p class="num">41</p><p class="rotulo">Mensajes por día</p></div>
+          <div class="cifra"><p class="num">19<small>caracteres</small></p><p class="rotulo">Largo del mensaje</p></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- derecha: lo que pasa en vivo -->
+    <div class="col col-der">
+      <section class="tarjeta panel chats-panel" id="sec-chats" aria-labelledby="t-chats">
+        <header class="tarjeta-cab"><h3 id="t-chats">Chats en vivo</h3><span class="contador" id="chats-contador">0</span></header>
+        <ol id="lista-chats"></ol>
+        <p class="vacio" id="chats-vacio">Todavía nadie escribió “Hola Romeo”.</p>
+        <p class="pie" id="no-tocar">0 chats en no tocar</p>
+      </section>
+
+      <section class="tarjeta panel borradores-panel" id="sec-borradores" aria-labelledby="t-borradores">
+        <header class="tarjeta-cab"><h3 id="t-borradores">Borradores</h3><span class="contador" id="borr-contador">0</span></header>
+        <ol id="lista-borradores"></ol>
+        <p class="vacio" id="borr-vacio">No hay borradores esperando.</p>
+      </section>
+    </div>
+  </main>
+</div>
+<div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+
+<script nonce="__NONCE__">
+(() => {
+  'use strict';
+
+  const VOS_MS = 3.7 * 60 * 1000; // "Tardás en contestar 3,7 min"
+  const REGLAS = [['auto', 'Automático'], ['sugerir', 'Sugerir'], ['no_tocar', 'No tocar']];
+  const CATEGORIAS = {
+    pareja: 'pareja', situationship: 'situationship', amistad: 'amistad',
+    familia: 'familia', nada_serio: 'nada serio', desconocido: 'sin categoría',
+  };
+  const AUTORES = { contacto: 'contacto', romeo: 'Romeo', vos: 'vos' };
+  const CLAVE_MEMORIA = 'romeo.memoria.abierta';
+  const quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const S = {
+    tz: 'America/Argentina/Buenos_Aires',
+    vivo: false, pausado: false, horaCorte: null,
+    metricas: null, memoria: null, ultimoEnvio: null, borradores: [],
+    memoriaAbierta: false,
+  };
+
+  const $ = (id) => document.getElementById(id);
+  function el(tag, cls, txt) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (txt !== undefined && txt !== null) e.textContent = String(txt);
+    return e;
+  }
+
+  // ---------- formatos ----------
+  const nf0 = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 });
+  const nf1 = new Intl.NumberFormat('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  function duracion(ms) {
+    if (ms === null || ms === undefined || !isFinite(ms)) return ['—', ''];
+    const s = Math.max(0, ms) / 1000;
+    if (s < 9.95) return [nf1.format(s), 's'];
+    if (s < 59.5) return [nf0.format(s), 's'];
+    const m = s / 60;
+    if (m < 9.95) return [nf1.format(m), 'min'];
+    if (m < 119.5) return [nf0.format(m), 'min'];
+    return [nf1.format(m / 60), 'h'];
+  }
+  const entero = (v) => [nf0.format(Math.round(v)), ''];
+  let fmtHora = null;
+  function hora(ms) {
+    if (!fmtHora) fmtHora = new Intl.DateTimeFormat('es-AR', { timeZone: S.tz, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+    return fmtHora.format(ms);
+  }
+  function hace(ms) {
+    const d = Math.max(0, Date.now() - ms) / 1000;
+    if (d < 45) return 'recién';
+    if (d < 90) return 'hace 1 min';
+    if (d < 3600) return `hace ${Math.round(d / 60)} min`;
+    const h = Math.round(d / 3600);
+    return h === 1 ? 'hace 1 hora' : `hace ${h} horas`;
+  }
+
+  // ---------- aviso ----------
+  let tAviso;
+  function avisar(txt) {
+    const a = $('aviso');
+    a.textContent = txt;
+    a.classList.add('ver');
+    clearTimeout(tAviso);
+    tAviso = setTimeout(() => a.classList.remove('ver'), 3200);
+  }
+
+  async function post(url, cuerpo) {
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cuerpo || {}),
+    });
+    let datos = {};
+    try { datos = await r.json(); } catch { /* sin cuerpo */ }
+    if (!r.ok) throw new Error(datos.error || `Error ${r.status}`);
+    return datos;
+  }
+
+  // ---------- números animados ----------
+  const anim = new Map();
+  function animar(id, desde, hasta, formato) {
+    const num = $(id), uni = $(id + '-u');
+    const pintar = (v) => {
+      const [n, u] = formato(v);
+      num.textContent = n;
+      if (uni) uni.textContent = u;
+    };
+    cancelAnimationFrame(anim.get(id));
+    const sinDato = hasta === null || hasta === undefined;
+    if (sinDato || desde === null || desde === undefined || desde === hasta || quieto) {
+      pintar(sinDato ? null : hasta);
+      if (!sinDato && desde !== hasta && desde !== null && desde !== undefined) destello(num);
+      return;
+    }
+    const t0 = performance.now(), dur = 900;
+    const paso = (t) => {
+      const x = Math.min(1, (t - t0) / dur);
+      const e = 1 - Math.pow(1 - x, 3);
+      pintar(desde + (hasta - desde) * e);
+      if (x < 1) anim.set(id, requestAnimationFrame(paso));
+      else pintar(hasta);
+    };
+    anim.set(id, requestAnimationFrame(paso));
+    destello(num);
+  }
+  function destello(nodo) {
+    const c = nodo.closest('.cifra');
+    if (!c) return;
+    c.classList.add('cambio');
+    clearTimeout(c._t);
+    c._t = setTimeout(() => c.classList.remove('cambio'), 1400);
+  }
+
+  // ---------- métricas ----------
+  function aplicarMetricas(m) {
+    if (!m) return;
+    const p = S.metricas;
+    S.metricas = m;
+    animar('m-tiempo', p ? p.medianaMs : null, m.medianaMs, duracion);
+    animar('m-chats', p ? p.chats : null, m.chats, entero);
+    animar('m-enviados', p ? p.enviados : null, m.enviados, entero);
+    animar('m-citas', p ? p.citas : null, m.citas, entero);
+    $('m-desde').textContent = m.desdeCorte ? `desde las ${hora(m.desde)}` : 'desde hoy';
+    let veces = 'mediana; todavía sin respuestas';
+    if (m.medianaMs !== null && m.medianaMs !== undefined) {
+      const x = VOS_MS / Math.max(m.medianaMs, 1);
+      if (x >= 10) veces = `${nf0.format(x)} veces más rápido que vos`;
+      else if (x >= 1.15) veces = `${nf1.format(x)} veces más rápido que vos`;
+      else if (x >= 0.87) veces = 'tan rápido como vos';
+      else veces = 'más lento que vos, por ahora';
+    }
+    $('m-veces').textContent = veces;
+  }
+
+  // ---------- conexión ----------
+  function aplicarConexion(c) {
+    if (!c) return;
+    const pill = $('pill-conexion');
+    pill.dataset.estado = c.estado;
+    const corto = {
+      conectado: 'WhatsApp conectado', conectando: 'Conectando…',
+      esperando_vinculo: 'Esperando vínculo', desconectado: 'WhatsApp desconectado',
+    };
+    $('pill-conexion-txt').textContent = corto[c.estado] || 'Estado desconocido';
+    const linea = $('conexion-estado');
+    linea.textContent = '';
+    if (c.estado === 'conectado') {
+      linea.append('Conectado como ');
+      linea.append(el('b', null, c.como || 'tu cuenta'));
+    } else if (c.estado === 'conectando') {
+      linea.textContent = 'Conectando con WhatsApp…';
+    } else if (c.estado === 'esperando_vinculo') {
+      linea.textContent = c.codigoVinculo ? 'Esperando vínculo: poné este código en el teléfono' : 'Esperando vínculo: escaneá el QR de la terminal';
+    } else {
+      linea.textContent = 'Desconectado';
+    }
+    const cod = c.codigoVinculo ? String(c.codigoVinculo) : '';
+    $('conexion-codigo').hidden = !cod;
+    $('codigo-valor').textContent = /^[A-Za-z0-9]{8}$/.test(cod) ? `${cod.slice(0, 4)}-${cod.slice(4)}` : cod;
+  }
+
+  // ---------- controles ----------
+  function pintarEstado() {
+    const p = $('pill-estado');
+    const [estado, txt] = !S.vivo ? ['sin-tablero', 'reconectando…'] : S.pausado ? ['pausa', 'en pausa'] : ['vivo', 'en vivo'];
+    p.dataset.estado = estado;
+    $('pill-estado-txt').textContent = txt;
+  }
+  function aplicarControles(c) {
+    if (!c) return;
+    if (typeof c.pausado === 'boolean') S.pausado = c.pausado;
+    if ('horaCorte' in c) S.horaCorte = c.horaCorte;
+    document.body.classList.toggle('pausado', S.pausado);
+    $('banda-pausa').hidden = !S.pausado;
+    const b = $('btn-pausa');
+    b.textContent = S.pausado ? 'Reanudar a Romeo' : 'Pausar a Romeo';
+    b.setAttribute('aria-pressed', String(S.pausado));
+    const corte = $('corte-texto');
+    corte.textContent = '';
+    if (S.horaCorte) {
+      corte.append('Balcón abierto desde las ');
+      corte.append(el('b', null, hora(S.horaCorte)));
+    } else {
+      corte.textContent = 'El balcón está cerrado: todavía no hay hora de corte.';
+    }
+    if (c.frase) $('frase').textContent = c.frase;
+    if (c.proveedor) {
+      const sel = $('sel-proveedor');
+      sel.value = c.proveedor;
+      for (const o of c.proveedores || []) {
+        const opt = sel.querySelector(`option[value="${o.id}"]`);
+        if (opt) opt.disabled = !o.listo;
+      }
+      $('proveedor-detalle').textContent = c.proveedorTexto ? `Contesta: ${c.proveedorTexto}` : '';
+    }
+    pintarEstado();
+  }
+
+  $('sel-proveedor').addEventListener('change', async (ev) => {
+    const sel = ev.currentTarget;
+    sel.disabled = true;
+    try {
+      aplicarControles(await post('/api/proveedor', { proveedor: sel.value }));
+      avisar(`Cerebro: ${$('proveedor-detalle').textContent.replace(/^Contesta: /, '')}`);
+    } catch (err) {
+      avisar(`No pude cambiar el cerebro: ${err.message}`);
+    } finally {
+      sel.disabled = false;
+    }
+  });
+
+  $('btn-pausa').addEventListener('click', async (ev) => {
+    const b = ev.currentTarget;
+    b.disabled = true;
+    try {
+      aplicarControles(await post('/api/pausa', { pausado: !S.pausado }));
+      avisar(S.pausado ? 'Romeo quedó en pausa.' : 'Romeo vuelve a contestar.');
+    } catch (err) {
+      avisar(`No pude cambiar la pausa: ${err.message}`);
+    } finally {
+      b.disabled = false;
+    }
+  });
+
+  $('btn-corte').addEventListener('click', async (ev) => {
+    if (S.horaCorte && !window.confirm(`El balcón ya está abierto desde las ${hora(S.horaCorte)}.\n¿Abrirlo de nuevo desde ahora? Las cifras de Romeo vuelven a cero.`)) return;
+    const b = ev.currentTarget;
+    b.disabled = true;
+    try {
+      aplicarControles(await post('/api/corte', {}));
+      avisar('Balcón abierto: desde ahora vale “Hola Romeo”.');
+    } catch (err) {
+      avisar(`No pude abrir el balcón: ${err.message}`);
+    } finally {
+      b.disabled = false;
+    }
+  });
+
+  // ---------- chats ----------
+  const filas = new Map();
+  function crearFila(jid) {
+    const li = el('li', 'chat');
+    const cab = el('div', 'chat-cab');
+    const quien = el('span', 'quien');
+    const cat = el('span', 'categoria');
+    const lab = el('label', 'regla-sel');
+    const sel = el('select');
+    sel.setAttribute('aria-label', 'Regla del chat');
+    for (const [v, t] of REGLAS) {
+      const o = el('option', null, t);
+      o.value = v;
+      sel.append(o);
+    }
+    lab.append(sel);
+    cab.append(quien, cat, lab);
+    const interes = el('div', 'interes');
+    const barra = el('span', 'barra');
+    const relleno = el('span', 'relleno');
+    barra.append(relleno);
+    const inum = el('span', 'interes-num', '—');
+    interes.append(el('span', null, 'Interés'), barra, inum);
+    const cuerpo = el('div');
+    li.append(cab, interes, cuerpo);
+    const f = { li, quien, cat, sel, relleno, inum, cuerpo, regla: null, firma: '' };
+    sel.addEventListener('change', async () => {
+      const nueva = sel.value, vieja = f.regla;
+      sel.disabled = true;
+      try {
+        await post(`/api/chats/${encodeURIComponent(jid)}/regla`, { regla: nueva });
+        f.regla = nueva;
+        li.dataset.regla = nueva;
+        avisar(`${f.quien.textContent}: ${REGLAS.find((r) => r[0] === nueva)[1].toLowerCase()}`);
+      } catch (err) {
+        sel.value = vieja;
+        avisar(`No pude cambiar la regla: ${err.message}`);
+      } finally {
+        sel.disabled = false;
+      }
+    });
+    return f;
+  }
+
+  function actualizarFila(f, c, primera) {
+    f.quien.textContent = c.quien;
+    f.cat.textContent = c.categoria ? (CATEGORIAS[c.categoria] || c.categoria) : 'sin categoría';
+    f.cat.classList.toggle('vacia', !c.categoria);
+    f.regla = c.regla;
+    f.li.dataset.regla = c.regla;
+    if (document.activeElement !== f.sel && !f.sel.disabled) f.sel.value = c.regla;
+    const interes = typeof c.interes === 'number' ? Math.round(c.interes) : null;
+    f.relleno.style.width = `${interes === null ? 0 : interes}%`;
+    f.inum.textContent = interes === null ? '—' : String(interes);
+
+    const firma = JSON.stringify([c.delPublico, c.mensajes]);
+    if (firma === f.firma) return;
+    const habiaAntes = f.firma !== '';
+    f.firma = firma;
+    f.cuerpo.textContent = '';
+    if (!c.delPublico) {
+      f.cuerpo.append(el('p', 'oculto', 'Elegido a mano: sus mensajes no se muestran.'));
+    } else if (c.mensajes.length) {
+      const ul = el('ul', 'ultimos');
+      for (const m of c.mensajes) {
+        const li = el('li', 'msg');
+        li.dataset.autor = m.autor;
+        li.append(el('b', null, AUTORES[m.autor] || m.autor), el('span', null, m.texto));
+        ul.append(li);
+      }
+      f.cuerpo.append(ul);
+    }
+    if (habiaAntes && !primera) {
+      f.li.classList.remove('nuevo');
+      void f.li.offsetWidth;
+      f.li.classList.add('nuevo');
+    }
+  }
+
+  let primerRender = true;
+  function pintarChats(chats, noTocar, total) {
+    const lista = $('lista-chats');
+    const vistos = new Set();
+    (chats || []).forEach((c, i) => {
+      let f = filas.get(c.jid);
+      if (!f) { f = crearFila(c.jid); filas.set(c.jid, f); }
+      actualizarFila(f, c, primerRender);
+      vistos.add(c.jid);
+      if (lista.children[i] !== f.li) lista.insertBefore(f.li, lista.children[i] || null);
+    });
+    for (const [jid, f] of filas) {
+      if (!vistos.has(jid)) { f.li.remove(); filas.delete(jid); }
+    }
+    primerRender = false;
+    $('chats-vacio').hidden = filas.size > 0;
+    $('chats-contador').textContent = String(typeof total === 'number' ? total : filas.size);
+    const n = Number(noTocar) || 0;
+    $('no-tocar').textContent = `${n} ${n === 1 ? 'chat' : 'chats'} en no tocar`;
+  }
+
+  // ---------- borradores ----------
+  function pintarBorradores(lista) {
+    S.borradores = Array.isArray(lista) ? lista : [];
+    const ol = $('lista-borradores');
+    ol.textContent = '';
+    for (const d of S.borradores) {
+      const li = el('li', 'borrador' + (d.delPublico ? '' : ' privado'));
+      const cab = el('div', 'borr-cab');
+      const h = el('span', 'hace', hace(d.creadoAt));
+      h.dataset.at = String(d.creadoAt);
+      cab.append(el('span', 'quien', d.quien), h);
+      const txt = el('p', 'borr-texto', d.texto);
+      const acc = el('div', 'borr-acciones');
+      const env = el('button', 'boton chico primario', 'Enviar');
+      const des = el('button', 'boton chico secundario', 'Descartar');
+      env.type = des.type = 'button';
+      const accion = async (que, ok) => {
+        env.disabled = des.disabled = true;
+        try {
+          await post(`/api/borradores/${encodeURIComponent(d.id)}/${que}`, {});
+          avisar(ok);
+          li.remove();
+          S.borradores = S.borradores.filter((x) => x.id !== d.id);
+          contarBorradores();
+        } catch (err) {
+          avisar(`No pude: ${err.message}`);
+          env.disabled = des.disabled = false;
+        }
+      };
+      env.addEventListener('click', () => accion('enviar', `Enviado a ${d.quien}.`));
+      des.addEventListener('click', () => accion('descartar', 'Borrador descartado.'));
+      acc.append(env, des);
+      li.append(cab, txt, acc);
+      ol.append(li);
+    }
+    contarBorradores();
+  }
+  function contarBorradores() {
+    $('borr-contador').textContent = String(S.borradores.length);
+    $('borr-vacio').hidden = S.borradores.length > 0;
+  }
+
+  // ---------- memoria ----------
+  function pintarMemoria(m) {
+    if (m !== undefined) S.memoria = m;
+    const mem = S.memoria;
+    const poner = (id, v) => {
+      const p = $(id);
+      const t = (v || '').trim();
+      p.textContent = t || 'nada por ahora';
+      p.classList.toggle('nada', !t);
+    };
+    poner('mem-agenda', mem && mem.agenda);
+    poner('mem-hoy', mem && mem.hoy);
+    poner('mem-perfil', mem && mem.perfil);
+    $('memoria-hace').textContent = mem && mem.at ? `actualizada ${hace(mem.at)}` : 'todavía no se armó';
+  }
+  function abrirMemoria(abierta) {
+    S.memoriaAbierta = abierta;
+    $('memoria-cuerpo').hidden = !abierta;
+    $('sec-memoria').classList.toggle('abierta', abierta);
+    $('btn-memoria').setAttribute('aria-expanded', String(abierta));
+    try { localStorage.setItem(CLAVE_MEMORIA, abierta ? '1' : '0'); } catch { /* sin storage */ }
+  }
+  $('btn-memoria').addEventListener('click', () => abrirMemoria(!S.memoriaAbierta));
+  // arranca cerrada: si el proyector recarga, la memoria no queda a la vista
+  let guardada = null;
+  try { guardada = localStorage.getItem(CLAVE_MEMORIA); } catch { /* sin storage */ }
+  abrirMemoria(guardada === '1');
+
+  // ---------- último envío ----------
+  function pintarUltimo(fresco) {
+    const e = S.ultimoEnvio;
+    const u = $('ultimo');
+    if (!e) return;
+    const lat = e.latencia_ms !== null && e.latencia_ms !== undefined ? duracion(e.latencia_ms).join(' ') : null;
+    u.textContent = fresco || Date.now() - e.at < 30000
+      ? `Acaba de contestarle a ${e.quien}${lat ? ` en ${lat}` : ''}`
+      : `Última respuesta ${hace(e.at)} · ${e.quien}${lat ? ` · ${lat}` : ''}`;
+    if (fresco) {
+      u.classList.remove('fresco');
+      void u.offsetWidth;
+      u.classList.add('fresco');
+    }
+  }
+
+  // ---------- tablero completo ----------
+  function aplicarTablero(t) {
+    if (!t) return;
+    if (t.tz && t.tz !== S.tz) { S.tz = t.tz; fmtHora = null; }
+    if (t.dueno) { AUTORES.vos = t.dueno; $('nombre-dueno').textContent = t.dueno; }
+    if ('evento' in t) { $('lema-evento').textContent = t.evento || ''; $('lema-evento').hidden = !t.evento; }
+    aplicarConexion(t.conexion);
+    aplicarControles(t);
+    aplicarMetricas(t.metricas);
+    pintarChats(t.chats, t.noTocar, t.chatsTotal);
+    pintarBorradores(t.borradores);
+    pintarMemoria(t.memoria);
+    if (t.ultimoEnvio && (!S.ultimoEnvio || t.ultimoEnvio.at > S.ultimoEnvio.at)) {
+      S.ultimoEnvio = t.ultimoEnvio;
+      pintarUltimo(false);
+    }
+  }
+
+  // ---------- tiempo real ----------
+  let fuente = null;
+  function conectar() {
+    if (fuente) fuente.close();
+    const es = new EventSource('/api/stream');
+    fuente = es;
+    const on = (ev, fn) => es.addEventListener(ev, (e) => {
+      try { fn(JSON.parse(e.data)); } catch (err) { console.error(ev, err); }
+    });
+    es.onopen = () => { S.vivo = true; pintarEstado(); };
+    es.onerror = () => {
+      S.vivo = false;
+      pintarEstado();
+      if (es.readyState === EventSource.CLOSED) setTimeout(conectar, 4000);
+    };
+    on('tablero', aplicarTablero);
+    on('metricas', aplicarMetricas);
+    on('conexion', aplicarConexion);
+    on('controles', aplicarControles);
+    on('memoria', (m) => pintarMemoria(m));
+    on('mensaje_enviado', (e) => { S.ultimoEnvio = e; pintarUltimo(true); });
+    on('chat_actualizado', () => { /* llega un 'tablero' nuevo enseguida */ });
+  }
+
+  function reloj() {
+    try { $('reloj').textContent = hora(Date.now()); } catch { /* zona inválida */ }
+  }
+  setInterval(reloj, 5000);
+  setInterval(() => {
+    pintarMemoria();
+    pintarUltimo(false);
+    for (const h of document.querySelectorAll('.borrador .hace')) h.textContent = hace(Number(h.dataset.at));
+  }, 20000);
+
+  reloj();
+  pintarMemoria(null);
+  pintarEstado();
+  conectar();
+})();
+</script>
+</body>
+</html>

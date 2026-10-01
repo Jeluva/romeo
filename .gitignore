@@ -1,0 +1,18 @@
+# Sesión de WhatsApp: si se filtra, cualquiera entra a tu cuenta
+auth/
+
+# API key de Anthropic y la dirección secreta del calendario
+.env
+
+# Quién sos en esta compu: nombre, Vault, notas, empresa, estilo (se arma con npm run configurar)
+romeo.config.json
+
+# Base de datos: mensajes, ejemplos de estilo y memoria filtrada
+data/
+data-sim/
+
+# Exportaciones de chats
+exports/
+*.chat.txt
+
+node_modules/
