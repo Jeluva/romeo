@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Romeo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..700&display=swap">
+<style>
+  html, body { margin: 0; height: 100%; background: #0f0a08; overflow: hidden; }
+  #escenario { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; transform-origin: center; }
+  section { position: absolute; inset: 0; width: 1920px; height: 1080px; box-sizing: border-box; overflow: hidden; }
+  /* cada slide trae su display inline (flex o grid): solo se esconden las que no están activas */
+  section:not(.activa) { display: none !important; }
+  section *, section *::before, section *::after { box-sizing: border-box; margin: 0; }
+  section table { border-collapse: collapse; width: 100%; }
+  section th, section td { padding: 14px 20px; border-bottom: 1px solid #C9B38A; }
+  section hr { border: 0; width: 100%; }
+  x-shape { display: block; flex: none; }
+  x-shape[kind="arrow-right"] { clip-path: polygon(0 32%, 62% 32%, 62% 0, 100% 50%, 62% 100%, 62% 68%, 0 68%); }
+  #contador { position: fixed; right: 16px; bottom: 12px; font: 14px Georgia, serif; color: #C9A24A; opacity: .7; }
+</style>
+</head>
+<body>
+<div id="escenario">
+<section id="cover" data-transition="fade" style="background:#F1E6CF;color:#2A1A12;font-family:'EB Garamond', Georgia, serif;padding:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #9C7A2E"></div>
+<svg aria-label="ornamento" width="480" height="24" viewBox="0 0 480 24"><line x1="0" y1="12" x2="206" y2="12" stroke="#9C7A2E" stroke-width="2"/><circle cx="216" cy="12" r="3" fill="#9C7A2E"/><path d="M240 1 L251 12 L240 23 L229 12 Z" fill="#9C7A2E"/><circle cx="264" cy="12" r="3" fill="#9C7A2E"/><line x1="274" y1="12" x2="480" y2="12" stroke="#9C7A2E" stroke-width="2"/></svg>
+<h1 style="font-family:'IM Fell English', Georgia, serif;font-size:220px;font-weight:400;line-height:1.05;color:#2A1A12;text-align:center">Romeo</h1>
+<p style="font-family:'IM Fell English', Georgia, serif;font-style:italic;font-size:48px;line-height:1.3;color:#5A4130;text-align:center;width:1300px">El asistente open source que gestiona tus relaciones por WhatsApp</p>
+<svg aria-label="ornamento" width="480" height="24" viewBox="0 0 480 24"><line x1="0" y1="12" x2="206" y2="12" stroke="#9C7A2E" stroke-width="2"/><circle cx="216" cy="12" r="3" fill="#9C7A2E"/><path d="M240 1 L251 12 L240 23 L229 12 Z" fill="#9C7A2E"/><circle cx="264" cy="12" r="3" fill="#9C7A2E"/><line x1="274" y1="12" x2="480" y2="12" stroke="#9C7A2E" stroke-width="2"/></svg>
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:28px;letter-spacing:3px;color:#5A4130;text-align:center">Jero Vazza · SideQuest LOVE.exe · 1 de octubre de 2026</p>
+
+</section>
+<section id="zhadan" data-transition="fade" style="background:#F1E6CF;color:#2A1A12;font-family:'EB Garamond', Georgia, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #9C7A2E"></div>
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:28px;letter-spacing:4px;color:#7B1E22">Antecedente</p>
+<h2 style="font-family:'IM Fell English', Georgia, serif;font-size:64px;font-weight:400;line-height:1.15;color:#2A1A12;width:1500px">Moscú, 2021. Aleksandr Zhadan le da su Tinder a una IA.</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;border-top:4px double #9C7A2E;padding:24px 0 0 0">
+<p style="font-family:'IM Fell English', Georgia, serif;font-size:140px;line-height:1.05;color:#7B1E22">5.239</p>
+<p style="font-size:32px;color:#5A4130">conversaciones</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;border-top:4px double #9C7A2E;padding:24px 0 0 0">
+<p style="font-family:'IM Fell English', Georgia, serif;font-size:140px;line-height:1.05;color:#7B1E22">100+</p>
+<p style="font-size:32px;color:#5A4130">citas agendadas</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;border-top:4px double #9C7A2E;padding:24px 0 0 0">
+<p style="font-family:'IM Fell English', Georgia, serif;font-size:140px;line-height:1.05;color:#7B1E22">1</p>
+<p style="font-size:32px;color:#5A4130">esposa</p>
+</div>
+</div>
+<p style="font-family:'IM Fell English', Georgia, serif;font-style:italic;font-size:40px;line-height:1.35;color:#2A1A12;width:1500px">El bot le agendó una cita que él no sabía que tenía. Karina, su esposa, se enteró meses después.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'IM Fell English SC', Georgia, serif;font-size:24px;letter-spacing:2px;color:#7A5C3E">Fuente: Gizmodo, 2024</p>
+
+</section>
+<section id="problema" data-transition="fade" style="background:#E8D9BA;color:#2A1A12;font-family:'EB Garamond', Georgia, serif;padding:128px;display:flex;flex-direction:column;gap:32px">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #9C7A2E"></div>
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:28px;letter-spacing:4px;color:#7B1E22">El problema</p>
+<h2 style="font-family:'IM Fell English', Georgia, serif;font-size:64px;font-weight:400;line-height:1.15;color:#2A1A12;width:1500px">Gestionar todas tus relaciones es un laburo de tiempo completo.</h2>
+<p style="font-size:34px;line-height:1.4;color:#5A4130">Pareja, situationships, amigos, familia. Todos por WhatsApp, todos a la vez.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+<div style="display:flex;flex-direction:column;gap:8px;background:#F1E6CF;padding:32px;border:2px solid #9C7A2E">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:44px;font-weight:400;color:#7B1E22">El small talk</h3>
+<p style="font-size:30px;line-height:1.4;color:#5A4130">Diez mensajes de «todo bien? vos?» antes de llegar a algo.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#F1E6CF;padding:32px;border:2px solid #9C7A2E">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:44px;font-weight:400;color:#7B1E22">El visto</h3>
+<p style="font-size:30px;line-height:1.4;color:#5A4130">¿Le escribo de nuevo o espero? ¿Cuánto?</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#F1E6CF;padding:32px;border:2px solid #9C7A2E">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:44px;font-weight:400;color:#7B1E22">El «jaja» seco</h3>
+<p style="font-size:30px;line-height:1.4;color:#5A4130">¿Le interesa o me está despachando?</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#F1E6CF;padding:32px;border:2px solid #9C7A2E">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:44px;font-weight:400;color:#7B1E22">El «no busco nada serio»</h3>
+<p style="font-size:30px;line-height:1.4;color:#5A4130">¿En qué categoría lo pongo?</p>
+</div>
+</div>
+
+</section>
+<section id="trovadores" data-transition="fade" style="background:#F1E6CF;color:#2A1A12;font-family:'EB Garamond', Georgia, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #9C7A2E"></div>
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:28px;letter-spacing:4px;color:#7B1E22">Lo que existe</p>
+<h2 style="font-family:'IM Fell English', Georgia, serif;font-size:60px;font-weight:400;line-height:1.15;color:#2A1A12">Las apps de hoy te soplan la frase. Vos copiás y pegás.</h2>
+<table style="font-family:'EB Garamond', Georgia, serif;font-size:28px;color:#2A1A12">
+<tr style="background:#E8D9BA"><th style="width:18%;text-align:left">App</th><th style="width:40%;text-align:left">Qué hace</th><th style="width:14%;text-align:center">Aprende tu voz</th><th style="width:14%;text-align:center">Contesta sola</th><th style="width:14%;text-align:center">Gestiona tus relaciones</th></tr>
+<tr><td>RIZZ</td><td>Sugiere respuestas desde una captura</td><td style="text-align:center">No</td><td style="text-align:center">No</td><td style="text-align:center">No</td></tr>
+<tr><td>Plug AI</td><td>Lo mismo, con suscripción semanal</td><td style="text-align:center">No</td><td style="text-align:center">No</td><td style="text-align:center">No</td></tr>
+<tr><td>YourMove AI</td><td>Openers, bio y respuestas</td><td style="text-align:center">No</td><td style="text-align:center">No</td><td style="text-align:center">No</td></tr>
+<tr><td>Keys AI</td><td>Un teclado que te coachea</td><td style="text-align:center">No</td><td style="text-align:center">No</td><td style="text-align:center">No</td></tr>
+<tr style="background:#E8D9BA"><td style="color:#7B1E22">Romeo</td><td style="color:#7B1E22">Aprende de tus chats y contesta solo por WhatsApp</td><td style="text-align:center;color:#7B1E22">Sí</td><td style="text-align:center;color:#7B1E22">Sí</td><td style="text-align:center;color:#7B1E22">Sí</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'IM Fell English SC', Georgia, serif;font-size:24px;letter-spacing:2px;color:#7A5C3E">RIZZ reporta más de 7,5 millones de descargas</p>
+
+</section>
+<section id="romeo" data-transition="fade" style="background:#1F1512;color:#F1E6CF;font-family:'EB Garamond', Georgia, serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:48px">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #C9A24A"></div>
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:28px;letter-spacing:6px;color:#C9A24A">La solución</p>
+<h2 style="font-family:'IM Fell English', Georgia, serif;font-size:88px;font-weight:400;line-height:1.12;color:#F1E6CF;width:1560px">Romeo aprende cómo hablás, contesta por vos y ordena todas tus relaciones.</h2>
+<svg aria-label="ornamento" width="480" height="24" viewBox="0 0 480 24"><line x1="0" y1="12" x2="206" y2="12" stroke="#C9A24A" stroke-width="2"/><circle cx="216" cy="12" r="3" fill="#C9A24A"/><path d="M240 1 L251 12 L240 23 L229 12 Z" fill="#C9A24A"/><circle cx="264" cy="12" r="3" fill="#C9A24A"/><line x1="274" y1="12" x2="480" y2="12" stroke="#C9A24A" stroke-width="2"/></svg>
+<p style="font-family:'IM Fell English', Georgia, serif;font-style:italic;font-size:44px;line-height:1.3;color:#C9A24A">Open source. En tu compu, con tu WhatsApp y tu segundo cerebro.</p>
+
+</section>
+<section id="funciones" data-transition="fade" style="background:#F1E6CF;color:#2A1A12;font-family:'EB Garamond', Georgia, serif;padding:128px;display:flex;flex-direction:column;gap:40px">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #9C7A2E"></div>
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:28px;letter-spacing:4px;color:#7B1E22">Funciones</p>
+<h2 style="font-family:'IM Fell English', Georgia, serif;font-size:64px;font-weight:400;line-height:1.15;color:#2A1A12">Qué hace Romeo</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px">
+<div style="display:flex;flex-direction:column;gap:12px;background:#FAF3E3;padding:32px;border:2px solid #9C7A2E">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:38px;font-weight:400;color:#7B1E22">Contesta por vos</h3>
+<p style="font-size:28px;line-height:1.35;color:#5A4130">Con tu personalidad. Se saltea el small talk y va al punto.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FAF3E3;padding:32px;border:2px solid #9C7A2E">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:38px;font-weight:400;color:#7B1E22">Categoriza</h3>
+<p style="font-size:28px;line-height:1.35;color:#5A4130">Pareja, amistad, familia, situationship, «nada serio». Y un ranking de quién vale la pena.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FAF3E3;padding:32px;border:2px solid #9C7A2E">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:38px;font-weight:400;color:#7B1E22">Analiza el visto</h3>
+<p style="font-size:28px;line-height:1.35;color:#5A4130">Cuánto tarda cada uno, qué significa y qué te conviene hacer.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FAF3E3;padding:32px;border:2px solid #9C7A2E">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:38px;font-weight:400;color:#7B1E22">Lee entre líneas</h3>
+<p style="font-size:28px;line-height:1.35;color:#5A4130">Detecta el «jaja» seco y mide el interés de 0 a 100.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FAF3E3;padding:32px;border:2px solid #9C7A2E">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:38px;font-weight:400;color:#7B1E22">Agenda</h3>
+<p style="font-size:28px;line-height:1.35;color:#5A4130">Cuando la charla da, propone fecha: citas, juntadas, cumpleaños.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FAF3E3;padding:32px;border:2px solid #9C7A2E">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:38px;font-weight:400;color:#7B1E22">Vos decidís</h3>
+<p style="font-size:28px;line-height:1.35;color:#5A4130">Qué chats contesta solo, en cuáles sugiere y cuáles no toca.</p>
+</div>
+</div>
+
+</section>
+<section id="persona" data-transition="fade" style="background:#E8D9BA;color:#2A1A12;font-family:'EB Garamond', Georgia, serif;padding:128px;display:grid;grid-template-columns:1fr 920px;gap:80px;align-items:center">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #9C7A2E"></div>
+<div style="display:flex;flex-direction:column;gap:32px">
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:28px;letter-spacing:4px;color:#7B1E22">La ficha de cada persona</p>
+<h2 style="font-family:'IM Fell English', Georgia, serif;font-size:64px;font-weight:400;line-height:1.15;color:#2A1A12">Como un CRM, pero de tu vida.</h2>
+<p style="font-size:32px;line-height:1.4;color:#5A4130">Cada contacto tiene su categoría, su nivel de interés y una sugerencia de qué hacer.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px;background:#FAF3E3;padding:48px;border:2px solid #9C7A2E;box-shadow:0 12px 32px rgba(42,26,18,0.18)">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:44px;font-weight:400;color:#2A1A12">Contacto de ejemplo</h3>
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:24px;letter-spacing:2px;color:#F1E6CF;background:#7B1E22;padding:6px 20px;border-radius:24px">Situationship</p>
+</div>
+<hr style="border-top:2px solid #C9B38A">
+<div style="display:flex;justify-content:space-between;align-items:center"><p style="font-size:30px;color:#5A4130">Interés</p><p style="font-size:30px;color:#7B1E22">62 de 100</p></div>
+<div style="display:flex;width:824px;height:16px;background:#E8D9BA"><div style="width:511px;height:16px;background:#7B1E22"></div></div>
+<div style="display:flex;justify-content:space-between"><p style="font-size:30px;color:#5A4130">Tarda en contestar</p><p style="font-size:30px;color:#2A1A12">4 h, antes 10 min</p></div>
+<div style="display:flex;justify-content:space-between"><p style="font-size:30px;color:#5A4130">Visto sin respuesta</p><p style="font-size:30px;color:#2A1A12">hace 2 días</p></div>
+<div style="display:flex;justify-content:space-between"><p style="font-size:30px;color:#5A4130">Señales</p><p style="font-size:30px;color:#2A1A12">2 «jaja» secos esta semana</p></div>
+<hr style="border-top:2px solid #C9B38A">
+<p style="font-family:'IM Fell English', Georgia, serif;font-style:italic;font-size:32px;line-height:1.35;color:#7B1E22">Romeo sugiere: hoy no le escribas. Mañana retomá lo del recital.</p>
+</div>
+
+</section>
+<section id="adn" data-transition="fade" style="background:#F1E6CF;color:#2A1A12;font-family:'EB Garamond', Georgia, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #9C7A2E"></div>
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:28px;letter-spacing:4px;color:#7B1E22">Cómo aprende</p>
+<h2 style="font-family:'IM Fell English', Georgia, serif;font-size:64px;font-weight:400;line-height:1.15;color:#2A1A12">Primero, Romeo lee cómo hablás vos.</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:32px 40px">
+<div style="display:flex;flex-direction:column;gap:4px;border-top:4px double #9C7A2E;padding:16px 0 0 0"><p style="font-family:'IM Fell English', Georgia, serif;font-size:80px;line-height:1.05;color:#7B1E22">1.172</p><p style="font-size:28px;line-height:1.3;color:#5A4130">mensajes míos leídos</p></div>
+<div style="display:flex;flex-direction:column;gap:4px;border-top:4px double #9C7A2E;padding:16px 0 0 0"><p style="font-family:'IM Fell English', Georgia, serif;font-size:80px;line-height:1.05;color:#7B1E22">105</p><p style="font-size:28px;line-height:1.3;color:#5A4130">chats en un año</p></div>
+<div style="display:flex;flex-direction:column;gap:4px;border-top:4px double #9C7A2E;padding:16px 0 0 0"><p style="font-family:'IM Fell English', Georgia, serif;font-size:80px;line-height:1.05;color:#7B1E22">19</p><p style="font-size:28px;line-height:1.3;color:#5A4130">caracteres por mensaje</p></div>
+<div style="display:flex;flex-direction:column;gap:4px;border-top:4px double #9C7A2E;padding:16px 0 0 0"><p style="font-family:'IM Fell English', Georgia, serif;font-size:80px;line-height:1.05;color:#7B1E22">89%</p><p style="font-size:28px;line-height:1.3;color:#5A4130">arrancan en minúscula</p></div>
+<div style="display:flex;flex-direction:column;gap:4px;border-top:4px double #9C7A2E;padding:16px 0 0 0"><p style="font-family:'IM Fell English', Georgia, serif;font-size:80px;line-height:1.05;color:#7B1E22">0%</p><p style="font-size:28px;line-height:1.3;color:#5A4130">terminan con punto</p></div>
+<div style="display:flex;flex-direction:column;gap:4px;border-top:4px double #9C7A2E;padding:16px 0 0 0"><p style="font-family:'IM Fell English', Georgia, serif;font-size:80px;line-height:1.05;color:#7B1E22">58</p><p style="font-size:28px;line-height:1.3;color:#5A4130">veces «amigo»</p></div>
+<div style="display:flex;flex-direction:column;gap:4px;border-top:4px double #9C7A2E;padding:16px 0 0 0"><p style="font-family:'IM Fell English', Georgia, serif;font-size:80px;line-height:1.05;color:#7B1E22">4</p><p style="font-size:28px;line-height:1.3;color:#5A4130">emojis en todo el año</p></div>
+<div style="display:flex;flex-direction:column;gap:4px;border-top:4px double #9C7A2E;padding:16px 0 0 0"><p style="font-family:'IM Fell English', Georgia, serif;font-size:80px;line-height:1.05;color:#7B1E22">23 h</p><p style="font-size:28px;line-height:1.3;color:#5A4130">mi hora más activa</p></div>
+</div>
+<p style="font-family:'IM Fell English', Georgia, serif;font-style:italic;font-size:40px;line-height:1.3;color:#2A1A12">Mi risa es «jajajajaj». Siempre termina en j. Romeo también.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'IM Fell English SC', Georgia, serif;font-size:24px;letter-spacing:2px;color:#7A5C3E">Solo mis mensajes, de octubre 2025 a septiembre 2026</p>
+
+</section>
+<section id="memoria" data-transition="fade" style="background:#E8D9BA;color:#2A1A12;font-family:'EB Garamond', Georgia, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #9C7A2E"></div>
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:28px;letter-spacing:4px;color:#7B1E22">Memoria</p>
+<h2 style="font-family:'IM Fell English', Georgia, serif;font-size:64px;font-weight:400;line-height:1.15;color:#2A1A12">Romeo sabe qué hiciste hoy.</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:48px">
+<div style="display:flex;flex-direction:column;gap:20px;background:#F1E6CF;padding:40px;border:2px solid #9C7A2E">
+<p style="align-self:flex-start;font-size:30px;line-height:1.35;color:#2A1A12;background:#FAF3E3;padding:12px 24px;border-radius:20px">que hiciste hoy?</p>
+<p style="align-self:flex-end;font-size:30px;line-height:1.35;color:#F1E6CF;background:#7B1E22;padding:12px 24px;border-radius:20px">laburé a la mañana y después me fui a una conferencia de ia</p>
+<p style="align-self:flex-start;font-size:30px;line-height:1.35;color:#2A1A12;background:#FAF3E3;padding:12px 24px;border-radius:20px">y ahora?</p>
+<p style="align-self:flex-end;font-size:30px;line-height:1.35;color:#F1E6CF;background:#7B1E22;padding:12px 24px;border-radius:20px">ahora estoy presentando esto amigo jajajajaj</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:8px;border-top:4px double #9C7A2E;padding:16px 0 0 0">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:40px;font-weight:400;color:#7B1E22">Tu segundo cerebro</h3>
+<p style="font-size:30px;line-height:1.35;color:#5A4130">Lee lo que anotás en tu diario y en tus notas.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;border-top:4px double #9C7A2E;padding:16px 0 0 0">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:40px;font-weight:400;color:#7B1E22">Tu calendario</h3>
+<p style="font-size:30px;line-height:1.35;color:#5A4130">Sabe dónde estás, a dónde vas y a qué no fuiste.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;border-top:4px double #9C7A2E;padding:16px 0 0 0">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:40px;font-weight:400;color:#7B1E22">Tus chats</h3>
+<p style="font-size:30px;line-height:1.35;color:#5A4130">Aprende cómo escribís de tu historial.</p>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-family:'IM Fell English SC', Georgia, serif;font-size:24px;letter-spacing:2px;color:#7A5C3E">Lo sensible no sale: ni plata, ni salud, ni nombres de nadie</p>
+
+</section>
+<section id="tramoya" data-transition="fade" style="background:#E8D9BA;color:#2A1A12;font-family:'EB Garamond', Georgia, serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #9C7A2E"></div>
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:28px;letter-spacing:4px;color:#7B1E22">Cómo funciona</p>
+<h2 style="font-family:'IM Fell English', Georgia, serif;font-size:64px;font-weight:400;line-height:1.15;color:#2A1A12">De un mensaje entrante a una respuesta tuya, sin vos.</h2>
+<div style="display:flex;gap:16px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#F1E6CF;padding:28px;border:2px solid #9C7A2E"><h3 style="font-family:'IM Fell English', Georgia, serif;font-size:36px;font-weight:400;color:#7B1E22">Te escriben</h3><p style="font-size:26px;line-height:1.35;color:#5A4130">Un mensaje por privado. Los grupos no se tocan.</p></div>
+<x-shape kind="arrow-right" style="width:48px;height:28px;background:#7B1E22;align-self:center"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#F1E6CF;padding:28px;border:2px solid #9C7A2E"><h3 style="font-family:'IM Fell English', Georgia, serif;font-size:36px;font-weight:400;color:#7B1E22">Romeo escucha</h3><p style="font-size:26px;line-height:1.35;color:#5A4130">Lo detecta en tiempo real, desde tu compu.</p></div>
+<x-shape kind="arrow-right" style="width:48px;height:28px;background:#7B1E22;align-self:center"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#F1E6CF;padding:28px;border:2px solid #9C7A2E"><h3 style="font-family:'IM Fell English', Georgia, serif;font-size:36px;font-weight:400;color:#7B1E22">Mira tus reglas</h3><p style="font-size:26px;line-height:1.35;color:#5A4130">¿Este chat lo contesta solo, sugiere o no lo toca?</p></div>
+<x-shape kind="arrow-right" style="width:48px;height:28px;background:#7B1E22;align-self:center"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#F1E6CF;padding:28px;border:2px solid #9C7A2E"><h3 style="font-family:'IM Fell English', Georgia, serif;font-size:36px;font-weight:400;color:#7B1E22">Escribe como vos</h3><p style="font-size:26px;line-height:1.35;color:#5A4130">Con tu personalidad y lo que sabe de vos, sin datos sensibles.</p></div>
+<x-shape kind="arrow-right" style="width:48px;height:28px;background:#7B1E22;align-self:center"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#F1E6CF;padding:28px;border:2px solid #9C7A2E"><h3 style="font-family:'IM Fell English', Georgia, serif;font-size:36px;font-weight:400;color:#7B1E22">Contesta</h3><p style="font-size:26px;line-height:1.35;color:#5A4130">Con demora de tipeo, para no parecer desesperado.</p></div>
+</div>
+<p style="font-family:'IM Fell English', Georgia, serif;font-style:italic;font-size:40px;line-height:1.3;color:#2A1A12">Solo chats privados. En los grupos, Romeo no le chamuya a nadie.</p>
+
+</section>
+<section id="balcon" data-transition="fade" style="background:#1F1512;color:#F1E6CF;font-family:'EB Garamond', Georgia, serif;padding:128px;display:grid;grid-template-columns:1fr 560px;gap:96px;align-items:center">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #C9A24A"></div>
+<div style="display:flex;flex-direction:column;gap:40px">
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:28px;letter-spacing:6px;color:#C9A24A">Demo en vivo</p>
+<h2 style="font-family:'IM Fell English', Georgia, serif;font-size:96px;font-weight:400;line-height:1.1;color:#F1E6CF">Escribime.</h2>
+<p style="font-family:'IM Fell English', Georgia, serif;font-style:italic;font-size:44px;line-height:1.3;color:#C9A24A">Oh Romeo, Romeo, ¿por qué no contestás? Esta vez contesta.</p>
+<p style="font-size:30px;line-height:1.4;color:#D9C9A8">Escaneá y mandá el «Hola Romeo» que ya viene escrito. Ahora mismo no te contesto yo: te contesta Romeo.</p>
+</div>
+<div style="width:560px;height:560px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F1E6CF;border:6px double #C9A24A">
+<div style="display:flex;flex-direction:column;align-items:center;gap:16px;width:440px;text-align:center"><p style="font-family:'IM Fell English', Georgia, serif;font-size:40px;color:#7B1E22">Tu QR acá</p><p style="font-size:28px;line-height:1.35;color:#5A4130">npm run qr -- &lt;tu número&gt;</p></div>
+</div>
+
+</section>
+<section id="dashboards" data-transition="fade" style="background:#F1E6CF;color:#2A1A12;font-family:'EB Garamond', Georgia, serif;padding:128px;display:flex;flex-direction:column;gap:32px">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #9C7A2E"></div>
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:28px;letter-spacing:4px;color:#7B1E22">Métricas</p>
+<h2 style="font-family:'IM Fell English', Georgia, serif;font-size:64px;font-weight:400;line-height:1.15;color:#2A1A12">Vos y Romeo, cada uno con su tablero.</h2>
+<p style="font-size:32px;line-height:1.4;color:#5A4130;width:1500px">Cada mensaje de Romeo lleva una marca invisible. Nadie la ve, pero así tus métricas y las suyas nunca se mezclan.</p>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FAF3E3;padding:40px;border:2px solid #9C7A2E">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:44px;font-weight:400;color:#2A1A12">Vos</h3>
+<div style="display:flex;justify-content:space-between"><p style="font-size:30px;color:#5A4130">Tardás en contestar</p><p style="font-size:30px;color:#2A1A12">3,7 min</p></div>
+<div style="display:flex;justify-content:space-between"><p style="font-size:30px;color:#5A4130">Contestás en menos de 5 min</p><p style="font-size:30px;color:#2A1A12">53%</p></div>
+<div style="display:flex;justify-content:space-between"><p style="font-size:30px;color:#5A4130">Mensajes por día</p><p style="font-size:30px;color:#2A1A12">41</p></div>
+<div style="display:flex;justify-content:space-between"><p style="font-size:30px;color:#5A4130">Largo del mensaje</p><p style="font-size:30px;color:#2A1A12">19 caracteres</p></div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#2A1A12;padding:40px;border:2px solid #9C7A2E">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:44px;font-weight:400;color:#F1E6CF">Romeo</h3>
+<div style="display:flex;justify-content:space-between"><p style="font-size:30px;color:#D9C9A8">Tarda en contestar</p><p style="font-size:30px;color:#C9A24A">en vivo</p></div>
+<div style="display:flex;justify-content:space-between"><p style="font-size:30px;color:#D9C9A8">Chats que atendió</p><p style="font-size:30px;color:#C9A24A">en vivo</p></div>
+<div style="display:flex;justify-content:space-between"><p style="font-size:30px;color:#D9C9A8">Mensajes enviados</p><p style="font-size:30px;color:#C9A24A">en vivo</p></div>
+<div style="display:flex;justify-content:space-between"><p style="font-size:30px;color:#D9C9A8">Citas propuestas</p><p style="font-size:30px;color:#C9A24A">en vivo</p></div>
+</div>
+</div>
+
+</section>
+<section id="prospect" data-transition="fade" style="background:#E8D9BA;color:#2A1A12;font-family:'EB Garamond', Georgia, serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:48px">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #9C7A2E"></div>
+<div style="display:flex;gap:24px;align-items:center">
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:28px;letter-spacing:4px;color:#7B1E22">Explorar</p>
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:24px;letter-spacing:2px;color:#F1E6CF;background:#7B1E22;padding:6px 20px;border-radius:24px">Nuevo</p>
+</div>
+<h2 style="font-family:'IM Fell English', Georgia, serif;font-size:80px;font-weight:400;line-height:1.1;color:#2A1A12;width:1500px">Romeo encuentra gente nueva por vos.</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;border-top:4px double #9C7A2E;padding:24px 0 0 0">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:44px;font-weight:400;color:#7B1E22">Busca</h3>
+<p style="font-size:30px;line-height:1.4;color:#5A4130">Investiga personas interesantes que podrías querer conocer.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;border-top:4px double #9C7A2E;padding:24px 0 0 0">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:44px;font-weight:400;color:#7B1E22">Arranca la charla</h3>
+<p style="font-size:30px;line-height:1.4;color:#5A4130">Escribe el primer mensaje con tu voz, sin small talk.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;border-top:4px double #9C7A2E;padding:24px 0 0 0">
+<h3 style="font-family:'IM Fell English', Georgia, serif;font-size:44px;font-weight:400;color:#7B1E22">Concreta</h3>
+<p style="font-size:30px;line-height:1.4;color:#5A4130">No para hasta agendar la cita. Vos solo tenés que ir.</p>
+</div>
+</div>
+
+</section>
+<section id="fin" data-transition="fade" style="background:#1F1512;color:#F1E6CF;font-family:'EB Garamond', Georgia, serif;padding:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px">
+<div style="position:absolute;left:40px;top:40px;width:1840px;height:1000px;border:6px double #C9A24A"></div>
+<h1 style="font-family:'IM Fell English', Georgia, serif;font-size:200px;font-weight:400;line-height:1.05;color:#F1E6CF;text-align:center">Fin</h1>
+<svg aria-label="ornamento" width="480" height="24" viewBox="0 0 480 24"><line x1="0" y1="12" x2="206" y2="12" stroke="#C9A24A" stroke-width="2"/><circle cx="216" cy="12" r="3" fill="#C9A24A"/><path d="M240 1 L251 12 L240 23 L229 12 Z" fill="#C9A24A"/><circle cx="264" cy="12" r="3" fill="#C9A24A"/><line x1="274" y1="12" x2="480" y2="12" stroke="#C9A24A" stroke-width="2"/></svg>
+<p style="font-family:'IM Fell English', Georgia, serif;font-style:italic;font-size:48px;line-height:1.3;color:#C9A24A;text-align:center;width:1400px">Que ningún mensaje se quede sin contestar.</p>
+<p style="font-family:'IM Fell English SC', Georgia, serif;font-size:32px;letter-spacing:3px;color:#D9C9A8;text-align:center">Romeo es open source · github.com/Jeluva/romeo</p>
+
+</section>
+</div>
+<div id="contador"></div>
+<script>
+  const sl = [...document.querySelectorAll('#escenario > section')];
+  const esc = document.getElementById('escenario');
+  let i = Math.max(0, Math.min(sl.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+  function ajustar() {
+    const k = Math.min(innerWidth / 1920, innerHeight / 1080);
+    esc.style.transform = 'translate(-50%, -50%) scale(' + k + ')';
+  }
+  function mostrar(n) {
+    i = Math.max(0, Math.min(sl.length - 1, n));
+    sl.forEach((s, j) => s.classList.toggle('activa', j === i));
+    document.getElementById('contador').textContent = (i + 1) + ' / ' + sl.length;
+    history.replaceState(null, '', '#' + (i + 1));
+  }
+  addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) mostrar(i + 1);
+    else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) mostrar(i - 1);
+    else if (e.key === 'Home') mostrar(0);
+    else if (e.key === 'End') mostrar(sl.length - 1);
+    else if (e.key === 'f') document.documentElement.requestFullscreen?.();
+  });
+  addEventListener('click', (e) => mostrar(i + (e.clientX > innerWidth / 3 ? 1 : -1)));
+  addEventListener('resize', ajustar);
+  ajustar();
+  mostrar(i);
+</script>
+</body>
+</html>

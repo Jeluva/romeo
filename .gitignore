@@ -16,3 +16,6 @@ exports/
 *.chat.txt
 
 node_modules/
+
+# QR con tu número (npm run qr)
+qr-whatsapp.svg

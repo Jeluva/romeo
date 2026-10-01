@@ -60,6 +60,18 @@ Romeo le apaga el razonamiento (thinking) a los modelos que lo traen, porque si 
 - **El tablero escucha solo en `localhost`**, enmascara los números y nunca muestra el QR de vinculación.
 - **No se suben nunca**: `auth/` (tu sesión de WhatsApp), `.env`, `romeo.config.json`, `data/`.
 
+## El QR para que te escriban
+
+```bash
+npm run qr -- <tu número>
+```
+
+Arma el link `wa.me` con "Hola Romeo" ya escrito, lo muestra en la terminal y lo guarda en `qr-whatsapp.svg`. Es el mensaje que habilita el chat en el balcón.
+
+## La presentación
+
+[`presentacion/index.html`](presentacion/index.html) es la charla de Romeo en SideQuest LOVE.exe: abrila en el navegador y pasá las slides con las flechas (F para pantalla completa). El QR de la slide del balcón se reemplaza por el tuyo.
+
 ## Probar sin celular
 
 ```bash

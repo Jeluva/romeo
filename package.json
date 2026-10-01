@@ -11,6 +11,7 @@
     "start": "tsx src/index.ts",
     "simulate": "tsx src/dev/simulate.ts",
     "configurar": "tsx src/dev/configurar.ts",
+    "qr": "tsx src/dev/qr.ts",
     "typecheck": "tsc --noEmit"
   },
   "license": "MIT",
